@@ -218,7 +218,7 @@
                     <h5>@useername</h5>
                   <div class="first">
                     <button id="btn">Follow</button>
-                  <button id="logout">logout</button>
+                 <a href="../contoller/logout.php"><button id="logout">logout</button></a> 
                   </div>
                   <div class="scond">
                    <div class="button">
@@ -286,16 +286,28 @@ voluptates nesciunt eum soluta neque aliquam fugit </pre>
                          </div>
                     </div>
                     <script>
+                         let count=0;
                          let btn=document.getElementById('btn');
                          btn.addEventListener('click',()=>{
+                              if(count==0){
 btn.innerText = "";
 btn.innerHTML = "Following";
 btn.style.background="white";
 btn.style.color="black";
 btn.style.border="1px solid black";
+count=1;}
+else{
+     btn.innerText = "";
+btn.innerHTML = "Follow";
+btn.style.background="blue";
+btn.style.color="white";
+btn.style.border="none";  
+count=0;
+}
                          })
 
                          let logout = document.getElementById('logout');
+                    
 logout.addEventListener('click',()=>{
      fetch(`../contoller/logout.php?logout`,[method = 'POST'])
      .then (response=> response.json())

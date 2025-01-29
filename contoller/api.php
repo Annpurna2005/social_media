@@ -23,6 +23,7 @@ echo "file uploded succesfully";
     $result=mysqli_query($conn,$sql);
     if($result){
         echo "added";
+        header("Location: ../view/login.html");
     }
     else{
         echo "not added".mysqli_error($conn);

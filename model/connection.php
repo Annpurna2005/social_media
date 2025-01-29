@@ -11,6 +11,6 @@ if (!$conn) {
     echo "not connected".mysqli_connect_error();
 }
 else{
-echo "Connected successfully";
+// echo "Connected successfully";
 }
 ?>

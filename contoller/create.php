@@ -2,36 +2,39 @@
 include '../model/connection.php';
 session_start();
 
-if(isset($_POST['email']) && isset($_POST['password'])) {
+if(isset($_POST['login']))  {
     $password = md5($_POST['password']);
     $email = $_POST['email'];
-    $sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-    $result = mysqli_query($conn, $sql);
 
-    if ($result) {
+    // Use prepared statements to prevent SQL injection
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? AND password = ?");
+    $stmt->bind_param("ss", $email, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
         // Fetch user data
-        $user = mysqli_fetch_assoc($result);
-        
-        // Save user data to the session
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['user_name'] = $user['name']; // Assuming there's a 'name' column in your users table
+        $user = $result->fetch_assoc();
 
-        // Return success message
+        // Save user data to the session
+        $_SESSION['user_id'] = $user['userID'];
+       
         $response['message'] = "Login successful";
         $response['user'] = [
-            'id' => $user['id'],
+            'id' => $user['userID'],
             'email' => $user['email'],
             'name' => $user['name']
         ];
-        echo json_encode($response);
+        header("Location: ../view/home.html");
     } else {
-        // Return error message
+        // Handle invalid credentials
         $response['message'] = "Login not successful: Invalid credentials";
-        echo json_encode($response);
     }
 } else {
     $response['message'] = "Invalid request";
-    echo json_encode($response);
 }
+
+// Return the response as JSON
+echo json_encode($response);
+
 ?>
